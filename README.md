@@ -9,3 +9,5 @@ The lead developer for the ArcNet is Timemaster111. If you have any issues you c
 
 # License
 This project follows the GNU AGPL3 License. You can find it [here](./LICENSE).
+
+ArcNet is not affiliated with nor endorsed by Downpour Interactive
