@@ -1,7 +1,8 @@
 
 const sqlite3 = require("sqlite3")
-const { open } = require("sqlite");
+const sqlite = require("sqlite");
 
-const db = new sqlite3.Database("./API/database/database.db")
+const db = new sqlite.Database({filename: "./API/database/database.db", driver: sqlite3.Database})
+db.open()
 
-module.exports = {sqlite3: sqlite3, open: open, db: db}
+module.exports = {sqlite3: sqlite3, db: db}

@@ -128,3 +128,4 @@ dist
 
 # custom blocks
 private notes.txt
+/API/database/database.db
