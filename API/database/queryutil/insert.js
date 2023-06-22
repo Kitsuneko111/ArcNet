@@ -1,6 +1,9 @@
-const {db, sqlite} = require("./databaseimports")
+class Insert {
+    constructor(db){
+        this.db = db
+    }
 addGuild = (id, name, ticker, AlertReputationThreshold, BanReputationThreshold, AdminRole, Milsim, reputation = 0) => {
-    db.run(`
+    this.db.run(`
     INSERT INTO Guilds VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?
     )
@@ -10,7 +13,7 @@ addGuild = (id, name, ticker, AlertReputationThreshold, BanReputationThreshold, 
 }
 
 addUser = (id, lastname, nuker, raider, spy, nukebot, reputation = 0) => {
-    db.run(`
+    this.db.run(`
     INSERT INTO Users VALUES (
         ?, ?, ?, ?, ?, ?, ?
     )
@@ -20,7 +23,7 @@ addUser = (id, lastname, nuker, raider, spy, nukebot, reputation = 0) => {
 }
 
 addAlt = (main, alt) => {
-    db.run(`
+    this.db.run(`
     INSERT INTO Alts VALUES (
         NULL, ?, ?
     )
@@ -30,7 +33,7 @@ addAlt = (main, alt) => {
 }
 
 addGuildUser = (user, guild, owner, hicom) => {
-    db.run(`
+    this.db.run(`
     INSERT INTO GuildUsers VALUES (
         NULL, ?, ?, ?, ?
     )
@@ -40,7 +43,7 @@ addGuildUser = (user, guild, owner, hicom) => {
 }
 
 addAlert = (alert, guild) => {
-    db.run(`
+    this.db.run(`
     INSERT INTO Alerts VALUES (
         Null, ?, ?
     )
@@ -50,7 +53,7 @@ addAlert = (alert, guild) => {
 }
 
 addGuildEvent = (event, timestamp, info, guild) => {
-    db.run(`
+    this.db.run(`
     INSERT INTO GuildEvents VALUES (
         NULL, ?, ?, ?, ?
     )
@@ -60,7 +63,7 @@ addGuildEvent = (event, timestamp, info, guild) => {
 }
 
 addWar = (reporter, enemy, timestamp, info, proof, reporterrepchange, enemyrepchange, active) => {
-    db.run(`
+    this.db.run(`
     INSERT INTO Wars VALUES (
         NULL, ?, ?, ?, ?, ?, ?, ?, ?
     )
@@ -68,3 +71,47 @@ addWar = (reporter, enemy, timestamp, info, proof, reporterrepchange, enemyrepch
         reporter, enemy, timestamp, info, proof, reporterrepchange, enemyrepchange, active
     ])
 }
+
+addRaid = async (reporter, enemy, timestamp, info, proof, reporterrepchange, enemyrepchange) => {
+    await this.db.run(`
+    INSERT INTO Raids VALUES (
+        NULL, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+        reporter, enemy, timestamp, info, proof, reporterrepchange, enemyrepchange
+    ])
+    raidID = await this.db.get(`SELECT raiduserid FROM Raids ORDER BY raiduserid DESC LIMIT 1`)
+    return raidID.raiduserid
+}
+
+addRaidUser = (user, raid) => {
+    this.db.run(`
+    INSERT INTO RaidUsers VALUES (
+        NULL, ?, ?
+    )
+    `, [user, raid])
+}
+
+addInterGuildEvent = async (event, info, timestamp, guilda, guildb, proof, guildarepchange, guildbrepchange) => {
+    await this.db.run(`
+    INSERT INTO InterGuildEvents VALUES (
+        NULL, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+        event, info,  timestamp, guilda, guildb, proof, guildarepchange, guildbrepchange
+    ])
+    eventID = await this.db.get(`SELECT EventID FROM InterGuildEvents ORDER BY eventid DESC LIMIT`)
+    return eventID.eventid
+}
+
+addEventUser = (user, event) => {
+    this.db.run(`
+    INSERT INTO EventUsers VALUES (
+        NULL, ?, ?
+    )
+    `, [
+        user, event
+    ])
+}
+}
+module.exports = Insert
